@@ -26,4 +26,13 @@ def calcShannonEnt(dataSet):
         shannonEnt -= prob * log(prob, 2)  # log base 2
     return shannonEnt
 
+def splitDataSet(dataSet,axis,value):
+    retDataSet=[]
+    for featVec in dataSet:
+        if featVec[axis]==value:
+            reducedFeatVec=featVec[:axis]
+            reducedFeatVec.extend(featVec[axis+1:])
+            retDataSet.append(reducedFeatVec)
+    return retDataSet
+
 
