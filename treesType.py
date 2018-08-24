@@ -35,9 +35,33 @@ def splitDataSet(dataSet,axis,value):
             retDataSet.append(reducedFeatVec)
     return retDataSet
 
-#test for commit and push
+def calcShannonEnt(dataSet):
+    numEntries = len(dataSet)
+    labelCounts = {}
+    for featVec in dataSet: #the the number of unique elements and their occurance
+        currentLabel = featVec[-1]
+        if currentLabel not in labelCounts.keys(): labelCounts[currentLabel] = 0
+        labelCounts[currentLabel] += 1
+    shannonEnt = 0.0
+    for key in labelCounts:
+        prob = float(labelCounts[key])/numEntries
+        shannonEnt -= prob * log(prob,2) #log base 2
+    return shannonEnt
 
-def ii():
-    return 0
-
-#final test
+def chooseBestFeatureToSplit(dataSet):
+    numFeatures=len(dataSet[0])-1
+    baseEntropy=calcShannonEnt(dataSet)
+    bestInfoGain=0.0;    bestFeature=-1
+    for i in range(numFeatures):
+        featList=[example[i] for example in dataSet]
+        uniqueVals=set(featList)
+        newEntropy=0.0
+        for value in uniqueVals:
+            subDataSet=splitDataSet(dataSet,i,value)
+            prob=len(subDataSet)/float(len(dataSet))
+            newEntropy+=prob*calcShannonEnt(subDataSet)
+        infoGain=baseEntropy-newEntropy
+        if(infoGain>bestInfoGain):
+            bestInfoGain=infoGain
+            bestFeature=i
+    return bestFeature
