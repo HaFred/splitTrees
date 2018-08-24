@@ -8,3 +8,5 @@ Python console error: "python cannot register existing type 'GdkDisplayManager'"
 Solutions: remove pyqt5 boding to avoid Python from being interfered by these two bongdings.
 
 sudo apt-get remove python3-pyqt5
+
+It doesn't work again... seems like you have to use Tkagg backend rather than qt4agg
