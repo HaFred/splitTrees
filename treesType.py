@@ -65,3 +65,34 @@ def chooseBestFeatureToSplit(dataSet):
             bestInfoGain=infoGain
             bestFeature=i
     return bestFeature
+
+def majorityCnt(classList):
+    classCount={}
+    for vote in classList:
+        if vote not in classCount.keys(): classCount[vote] = 0
+        classCount[vote] += 1
+    sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
+    return sortedClassCount[0][0]
+
+def createTree(dataSet,labels):
+    classList=[example[-1] for example in dataSet]
+    if classList.count(classList[0])==len(classList):
+        return classList[0] # stop splitting trees when all the classes are the same
+    if len(dataSet[0])==1:
+        return majorityCnt(classList) # stop splitting when there's only one feature left
+    bestFeat=chooseBestFeatureToSplit(dataSet)
+    bestFeatLabel=labels[bestFeat]
+    myTree={bestFeatLabel:{}}
+    del (labels[bestFeat])
+    featValues=[example[bestFeat] for example in dataSet] # the type of features, 0 indicates the first one and 1 same reason
+    uniqueVals=set(featValues)
+    for value in uniqueVals:
+        subLabels=labels[:] #copy all of labels, so trees don't mess up existing labels
+        myTree[bestFeatLabel][value]=createTree(splitDataSet(dataSet,bestFeat,value)) # recursive thinking
+    return myTree
+
+def classify(inputTree,featLabels,testVec):
+    first=inputTree.keys()
+    firstStr=list(first)
+    secondDict=inputTree[firstStr]
+    featIndex=featLabels.index()
