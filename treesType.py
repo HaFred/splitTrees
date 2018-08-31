@@ -93,6 +93,12 @@ def createTree(dataSet,labels):
 
 def classify(inputTree,featLabels,testVec):
     first=inputTree.keys()
-    firstStr=list(first)
+    firstStr=list(first)[0]
     secondDict=inputTree[firstStr]
-    featIndex=featLabels.index()
+    featIndex=featLabels.index(firstStr)
+    key=testVec[featIndex]
+    valueOfFeat=secondDict[key]
+    if  isinstance(valueOfFeat,dict):
+        classLabel=classify(valueOfFeat,featLabels,testVec)
+    else: classLabel=valueOfFeat
+    return classLabel
